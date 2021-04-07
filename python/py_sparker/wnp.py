@@ -34,7 +34,14 @@ class WNP(object):
 
                 if neighbourWeight >= threshold:
                     cont += 1
+                    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                    print(groundtruth.value)
                     if groundtruth is not None:
+                        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                        print(groundtruth.value)
+                        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                        print(profileID, neighbourID)
+                        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                         if (profileID, neighbourID) in groundtruth.value:
                             gtFound += 1
 
@@ -222,7 +229,6 @@ class WNP(object):
             WNP.calcThresholds(profileBlocksFiltered, blockIndex, maxID, separatorIDs, thresholdType, weightType,
                                profileBlocksSizeIndex, useEntropy, blocksEntropies, numberOfEdges,
                                edgesPerProfile).collectAsMap())
-
         edges = WNP.pruning(profileBlocksFiltered, blockIndex, maxID, separatorIDs, groundtruth, thresholdType,
                             weightType, profileBlocksSizeIndex, useEntropy, blocksEntropies, chi2divider,
                             comparisonType, thresholds, numberOfEdges, edgesPerProfile)

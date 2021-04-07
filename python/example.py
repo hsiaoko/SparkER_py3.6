@@ -74,6 +74,8 @@ results = sparker.WNP.wnp(profileBlocksFiltered,
                           2.0,#Blast c parameter
                           sparker.ComparisonTypes.OR#Pruning strategy
                          )
+
+print(results.collect())
 match_found = float(results.map(lambda x: x[1]).sum())
 num_edges = results.map(lambda x: x[0]).sum()
 candidate_set = results.flatMap(lambda x: x[2])
