@@ -1,21 +1,24 @@
 import py_sparker as sparker
 from pyspark import SparkContext
-import  os
-#check if pyspark env vars are set and then reset to required or delete.   
-del os.environ['PYSPARK_SUBMIT_ARGS']
+import time
 
-pth_1 = "/data/DBLP2.csv"
-pth_2 = "/data/ACM.csv"
-pth_gt = "/data/DBLP-ACM_perfectMapping.csv"
+time_start=time.time()
+#check if pyspark env vars are set and then reset to required or delete.   
+
+pth_1 = "/home/LAB/zhuxk/project/data/PREEDet_data/TPACC/Test2005/csv/nimi.csv"
+pth_2 = "/home/LAB/zhuxk/project/data/PREEDet_data/TPACC/Test2005/csv/nimi.csv"
+pth_1 = "/home/LAB/zhuxk/project/data/PREEDet_data/TPACC/Test2005/test_result_2005_mini.csv"
+pth_2 = "/home/LAB/zhuxk/project/data/PREEDet_data/TPACC/Test2005/test_result_2005_mini.csv"
+pth_gt = "/home/LAB/zhuxk/project/data/PREEDet_data/TPACC/Test2005/csv/gt.csv"
 
 sc = SparkContext.getOrCreate()
 
-profiles1 = sparker.CSVWrapper.loadProfiles(pth_1, header = True, realIDField = "id")
+profiles1 = sparker.CSVWrapper.loadProfiles(pth_1, header = True, realIDField = "test_id")
 #Max profile id in the first dataset, used to separate the profiles in the next phases
 separatorID = profiles1.map(lambda profile: profile.profileID).max()
 
 
-profiles2 = sparker.CSVWrapper.loadProfiles(pth_2, header = True, realIDField = "id", startIDFrom = separatorID+1, sourceId=1)
+profiles2 = sparker.CSVWrapper.loadProfiles(pth_2, header = True, realIDField = "test_id", startIDFrom = separatorID+1, sourceId=1)
 
 separatorIDs = [separatorID]
 #separatorIDs = []   
@@ -23,7 +26,7 @@ maxProfileID = profiles2.map(lambda profile: profile.profileID).max()
 profiles = profiles1.union(profiles2)
 
 
-groundtruth = sparker.CSVWrapper.loadGroundtruth(pth_gt, id1="idDBLP", id2="idACM")
+groundtruth = sparker.CSVWrapper.loadGroundtruth(pth_gt, id1="idLeft", id2="idRight")
 
 
 realIdIds1 = sc.broadcast(profiles1.map(lambda p:(p.originalID, p.profileID)).collectAsMap())
@@ -87,4 +90,6 @@ print("match_found", match_found)
 pc = match_found / len(newGT.value)
 pq = match_found / num_edges
 print("Recall: "+str(pc)+", Precision: "+str(pq))
+time_end=time.time()
+print('totally cost',time_end-time_start)
 print("#############")
